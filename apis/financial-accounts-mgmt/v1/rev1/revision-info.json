@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "revision": 1,
+  "subscriptionRequired": true,
+  "path": "fin-account-mgmt",
+  "revisionDescription": "V1 - Initial revision",
+  "apiDescription": "User management of financial accounts.",
+  "releaseNotes": "",
+  "serviceUrl": "http://localhost:7071/api/v1"
+}

@@ -1,0 +1,7 @@
+{
+  "defaultContact": {
+    "email": "oink@example.com"
+  },
+  "defaultSubscriptionKeyHeader": "Ocp-Apim-Subscription-Key",
+  "defaultQueryParameter": "subscription-key"
+}

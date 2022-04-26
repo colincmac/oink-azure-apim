@@ -1,0 +1,90 @@
+openapi: 3.0.1
+info:
+  title: Oink Account Management API (Beta)
+  version: 1.0.0
+servers:
+  - url: https://localhost:7071/api
+paths:
+  /accounts:
+    post:
+      tags:
+        - admin
+      operationId: RequestFinancialAccountCreation
+      requestBody:
+        description: Account information needed to create an account reference in the Oink system.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createNewFinancialAccountRequest"
+        required: true
+      responses:
+        "201":
+          description: Financial Account creation requested
+          content:
+            application/json:
+              schema:
+                type: string
+        "409":
+          description: Financial Account creation request already exists
+          x-ms-summary: Financial Account creation account exists
+      security:
+        - function_key: []
+  "/accounts/{accountId}":
+    get:
+      tags:
+        - financial-account
+      operationId: GetFinancialAccountByAccountId
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Financial Account found
+          content:
+            application/json:
+              schema:
+                type: string
+        "404":
+          description: Financial Account not found
+          x-ms-summary: Financial Account not found
+  "/accounts/{accountId}/payments":
+    get:
+      tags:
+        - financial-account
+      operationId: GetAccountPaymentsByAccountId
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Financial Account found
+          content:
+            application/json:
+              schema:
+                type: string
+        "404":
+          description: Financial Account not found
+          x-ms-summary: Financial Account not found
+components:
+  schemas:
+    createNewFinancialAccountRequest:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        accountName:
+          type: string
+        accountClassIdentifier:
+          type: string
+  securitySchemes:
+    function_key:
+      type: apiKey
+      name: code
+      in: header

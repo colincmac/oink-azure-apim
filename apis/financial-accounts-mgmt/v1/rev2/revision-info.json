@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "revision": 2,
+  "subscriptionRequired": true,
+  "path": "fin-account-mgmt",
+  "revisionDescription": "OpenAPI updates",
+  "apiDescription": "User management of financial accounts.",
+  "releaseNotes": "Adding Account Balances endpoint",
+  "serviceUrl": "http://localhost:7071/api/v1"
+}
