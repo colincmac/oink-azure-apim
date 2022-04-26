@@ -23,7 +23,7 @@ resource api 'Microsoft.ApiManagement/service/apis@2021-08-01' existing = {
   parent: apimService
 }
 
-resource operation 'Microsoft.ApiManagement/service/apis/operations@2021-08-01' = {
+resource operation 'Microsoft.ApiManagement/service/apis/operations@2021-08-01' existing = {
   name: operationName
   parent: api
 }
