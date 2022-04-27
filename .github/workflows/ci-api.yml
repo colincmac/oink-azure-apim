@@ -80,7 +80,7 @@ jobs:
       - name: Deploy API Revisions
         uses: azure/arm-deploy@v1
         with:
-          resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          resourceGroupName: ${{ secrets.AZURE_APIM_RG }}
           template: ${{ needs.get_api_folder.outputs.mainBicepPath }}
           parameters: apimServiceName=${{ secrets.AZURE_APIM_NAME }}
 
