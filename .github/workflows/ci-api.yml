@@ -56,7 +56,6 @@ jobs:
     name: "Validate Bicep files"
     needs: get_api_folder
     runs-on: ubuntu-latest
-    environment: Prod
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
