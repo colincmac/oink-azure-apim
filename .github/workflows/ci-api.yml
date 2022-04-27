@@ -28,7 +28,7 @@ jobs:
           pwd
           cd $GITHUB_WORKSPACE
           pwd
-          LAST_PATH=$( git log --pretty="" --name-only -n 100 origin/main -- apis/**/* | head -1 )
+          LAST_PATH=$( git log --pretty="" --name-only -n 100 origin/main -- apis/**/* | grep -v ".github\|.devcontainer\|common-bicep" | head -1 )
           echo Last file modified: $LAST_PATH
           # Look for the main template file in this file's path or parents
           APIFOLDER_PATH=$( dirname "$LAST_PATH" )
