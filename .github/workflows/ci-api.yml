@@ -12,33 +12,57 @@ on:
       - 'apis/**'
 
 jobs:
-  # Reference: https://dev.to/scienta/get-changed-files-in-github-actions-1p36
-  changed_files:
+  get_api_folder:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.changes.outputs.all}}
+      apiFolderPath: ${{ steps.apiInfo.outputs.apiFolderPath}}
+      mainBicepPath: ${{ steps.apiInfo.outputs.mainBicepPath}}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Get changed files
-        id: changes
+      - name: Find API folder
+        id: apiInfo
         run: |
-          echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} -- apis/**/*)"
-
+          git status
+          # Get path of last file checked in
+          pwd
+          cd $GITHUB_WORKSPACE
+          pwd
+          LAST_PATH=$( git log --pretty="" --name-only -n 100 origin/main -- apis/**/* | head -1 )
+          echo Last file modified: $LAST_PATH
+          # Look for the main template file in this file's path or parents
+          APIFOLDER_PATH=$( dirname "$LAST_PATH" )
+          echo Last folder modified: $APIFOLDER_PATH
+          TESTFOLDER_PATH=$APIFOLDER_PATH
+          FOUNDFOLDER_PATH=
+          while [ "$TESTFOLDER_PATH" != "." ]
+          do
+            echo "Looking for main template in $TESTFOLDER_PATH"
+            MAINBICEP_PATH=$TESTFOLDER_PATH/main.bicep
+            if [ -f "$MAINBICEP_PATH" ]; then
+              FOUNDFOLDER_PATH=$TESTFOLDER_PATH
+              echo Found main template in $FOUNDFOLDER_PATH
+              break
+            fi
+            TESTFOLDER_PATH=$( dirname "$TESTFOLDER_PATH" )
+          done
+          if [ ! $FOUNDFOLDER_PATH ]; then
+              echo "Could not find main.bicep in folder or parents of $APIFOLDER_PATH" 1>&2
+              exit 1
+          fi
+          echo "::set-output name=apiFolderPath::$FOUNDFOLDER_PATH"
+          echo "::set-output name=mainBicepPath::$MAINBICEP_PATH"
   validate_bicep:
     name: "Validate Bicep files"
-    needs: changed_files
+    needs: get_api_folder
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        api: ${{fromJson(needs.changed_files.outputs.matrix)}}
     steps:
-      - name: Checkout the code
+      - name: Checkout repository
         uses: actions/checkout@2
 
       - name: Validate that bicep builds
         run: az bicep build -f main.bicep
-        working-directory: ${{ matrix.api }}
+        working-directory: ${{ needs.get_api_folder.outputs.apiFolderPath }}
 
   # deployment:
   #   runs-on: ubuntu-latest
