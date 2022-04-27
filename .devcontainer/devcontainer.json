@@ -1,0 +1,29 @@
+{
+	"name": "Azure Development Environment",
+	"extensions": [
+		"ms-dotnettools.csharp",
+    "ms-dotnettools.csharp",
+		"ms-vscode.vscode-node-azure-pack",
+		"ms-azuretools.vscode-apimanagement",
+		"msazurermtools.azurerm-vscode-tools",
+		"ms-kubernetes-tools.vscode-kubernetes-tools",
+		"ms-vscode.powershell",
+		"esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "github.vscode-pull-request-github",
+		"42crunch.vscode-openapi"
+	],
+	"features": {
+		"git": "latest",
+		"azure-cli": "latest",
+		"github-cli": "latest",
+		"powershell": "7.1",
+		"node": {
+      "version": "lts",
+      "nodeGypDependencies": true
+    },
+		"dotnet": {
+      "version": "6.0"
+    }
+	}
+}
