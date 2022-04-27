@@ -3,13 +3,13 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'apis/**'
+    # paths:
+    #   - 'apis/**'
   pull_request:
     branches:
       - main
-    paths:
-      - 'apis/**'
+    # paths:
+    #   - 'apis/**'
 
 jobs:
   get_api_folder:
