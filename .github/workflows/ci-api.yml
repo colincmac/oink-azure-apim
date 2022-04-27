@@ -12,6 +12,7 @@ on:
     #   - 'apis/**'
 
 jobs:
+  # TODO: extract into GH template
   get_api_folder:
     runs-on: ubuntu-latest
     outputs:
@@ -58,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@2
+        uses: actions/checkout@v2
 
       - name: Validate that bicep builds
         run: az bicep build -f main.bicep
