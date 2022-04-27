@@ -3,7 +3,7 @@
 @minLength(1)
 param apiDisplayName string = 'Financial Account Management'
 
-param apimServiceName string = 'colinmac-external-001'
+param apimServiceName string
 @allowed([
   'graphql'
   'http'
