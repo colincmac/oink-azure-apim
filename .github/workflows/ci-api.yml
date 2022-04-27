@@ -72,6 +72,8 @@ jobs:
       - validate_bicep
     environment: Prod
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Azure Login
         uses: azure/login@v1
         with:
