@@ -6,10 +6,12 @@ on:
       - main
     paths:
       - 'apis/**'
+  workflow_dispatch:
     
 jobs:
   # Modified version of Azure's sample repo: https://github.com/Azure/azure-quickstart-templates/blob/master/.github/workflows/auto-fix.yml
   get_api_folder:
+    name: "Get folder for modified API"
     runs-on: ubuntu-latest
     outputs:
       apiFolderPath: ${{ steps.apiInfo.outputs.apiFolderPath}}
