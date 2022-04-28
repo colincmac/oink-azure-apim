@@ -42,13 +42,9 @@ param existingSubnetId string
 **Internal** means that API Management deployment is setup inside a Virtual Network having an Intranet Facing Endpoint only.''')
 param vnetType string = empty(existingSubnetId) ? 'None' : 'External'
 
-// param appInsightsName string
-// param appInsightsId string
-// param appInsightsInstrumentationKey string
-
-// TODO: Allow User Assigned Managed Identities
-// TODO: Enable AppInsights
-
+// In this example, the custom domain for the Gateway is configured post deployment.
+// The associated certificate keyvault is only accessible from a private endpoint and uses RBAC roles,
+// which causes the deployment to fail if we try to add the domain during creation.
 resource apim 'Microsoft.ApiManagement/service@2021-08-01' = {
   name: apimName
   location: location
@@ -69,6 +65,6 @@ resource apim 'Microsoft.ApiManagement/service@2021-08-01' = {
   }
 }
 
-output provisionedResourceId string = apim.id
-output provisionedResourceName string = apim.name
-output provisionedLocationName string = apim.location
+output apimId string = apim.id
+output apimName string = apim.name
+output systemIdentityPrincipalId string = apim.identity.principalId

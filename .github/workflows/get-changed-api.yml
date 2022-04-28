@@ -1,0 +1,56 @@
+name: Get changed API
+
+on:
+  workflow_call:
+    outputs:
+      api_dir:
+        description: "The directory of the added or updated API. Empty if no API was changed."
+        value: ${{ jobs.main.outputs.module_dir }}
+      main_bicep_file:
+        description: "The location of the main deployment bicep file for the added or updated API. Empty if no API was changed."
+        value: ${{ jobs.main.outputs.module_dir }}
+
+# Modified version of Azure's sample repo: https://github.com/Azure/azure-quickstart-templates/blob/master/.github/workflows/auto-fix.yml
+# and Bicep registry https://github.com/Azure/bicep-registry-modules/tree/main/.github/workflows
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    outputs:
+      api_dir: ${{ steps.apiInfo.outputs.apiFolderPath }}
+      main_bicep_file: ${{ steps.apiInfo.outputs.mainBicepPath }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Find changed API
+        id: apiInfo
+        run: |
+          git status
+          # Get path of last file checked in
+          pwd
+          cd $GITHUB_WORKSPACE
+          pwd
+          LAST_PATH=$( git log --pretty="" --name-only -n 100 origin/main -- apis/**/* | grep -v ".github\|.devcontainer\|common-bicep" | head -1 )
+          echo Last file modified: $LAST_PATH
+          # Look for the main template file in this file's path or parents
+          APIFOLDER_PATH=$( dirname "$LAST_PATH" )
+          echo Last folder modified: $APIFOLDER_PATH
+          TESTFOLDER_PATH=$APIFOLDER_PATH
+          FOUNDFOLDER_PATH=
+          while [ "$TESTFOLDER_PATH" != "." ]
+          do
+            echo "Looking for main template in $TESTFOLDER_PATH"
+            MAINBICEP_PATH=$TESTFOLDER_PATH/main.bicep
+            if [ -f "$MAINBICEP_PATH" ]; then
+              FOUNDFOLDER_PATH=$TESTFOLDER_PATH
+              echo Found main template in $FOUNDFOLDER_PATH
+              break
+            fi
+            TESTFOLDER_PATH=$( dirname "$TESTFOLDER_PATH" )
+          done
+          if [ ! $FOUNDFOLDER_PATH ]; then
+              echo "Could not find main.bicep in folder or parents of $APIFOLDER_PATH" 1>&2
+              exit 1
+          fi
+          echo "::set-output name=apiFolderPath::$FOUNDFOLDER_PATH"
+          echo "::set-output name=mainBicepPath::$MAINBICEP_PATH"

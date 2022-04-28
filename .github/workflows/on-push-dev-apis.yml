@@ -1,0 +1,37 @@
+# TODO: parameterize and make re-usable 
+name: Publish API Changes
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'apis/**'
+  workflow_dispatch:
+    
+jobs:
+  get_api_to_publish:
+    uses: ./.github/workflows/get-changed-api.yml
+
+  validate_bicep:
+    name: "Validate Bicep files"
+    needs: get_api_to_publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Validate that bicep builds
+        run: az bicep build -f main.bicep
+        working-directory: ${{ needs.get_api_to_publish.outputs.api_dir }}
+
+  publish_api:
+    name: "Publish API to Dev"
+    uses: ./.github/workflows/publish-api.yml
+    needs:
+      - get_api_to_publish
+      - validate_bicep
+    with:
+      environment: 'Dev'
+      main_bicep_file: ${{ needs.get_api_to_publish.outputs.main_bicep_file }}
+
+    
