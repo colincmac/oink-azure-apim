@@ -10,6 +10,7 @@ on:
     
 jobs:
   get_api_to_publish:
+    name: "Get API to publish"
     uses: ./.github/workflows/get-changed-api.yml
 
   validate_bicep:
@@ -24,6 +25,7 @@ jobs:
         run: az bicep build -f main.bicep
         working-directory: ${{ needs.get_api_to_publish.outputs.api_dir }}
 
+  # https://github.com/actions/runner/issues/1490
   publish_api:
     name: "Publish API to Prod"
     uses: ./.github/workflows/publish-api.yml
