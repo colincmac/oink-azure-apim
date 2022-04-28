@@ -11,61 +11,27 @@ on:
 jobs:
   publish_all_staging:
     name: "Publish API's to Staging"
-    runs-on: ubuntu-latest
-    environment: Staging
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Deploy API Revisions
-        uses: azure/arm-deploy@v1
-        with:
-          resourceGroupName: ${{ secrets.AZURE_APIM_RG }}
-          template: apis/main.bicep
-          parameters: apimServiceName=${{ secrets.AZURE_APIM_NAME }}
-
-      - name: Azure logout
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az logout
-            az cache purge
-            az account clear
+    uses: ./.github/workflows/publish-api.yml
+    with:
+      main_bicep_file: apis/main.bicep
+      environment: Staging
+    secrets:
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_APIM_RG: ${{ secrets.AZURE_APIM_RG }}
+      AZURE_APIM_NAME: ${{ secrets.AZURE_APIM_NAME }}
 
   publish_all_prod:
     name: "Publish API's to Prod"
-    runs-on: ubuntu-latest
-    environment: Prod
-    needs: publish_api_staging
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Deploy API Revisions
-        uses: azure/arm-deploy@v1
-        with:
-          resourceGroupName: ${{ secrets.AZURE_APIM_RG }}
-          template: apis/main.bicep
-          parameters: apimServiceName=${{ secrets.AZURE_APIM_NAME }}
-
-      - name: Azure logout
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az logout
-            az cache purge
-            az account clear
+    uses: ./.github/workflows/publish-api.yml
+    needs: publish_all_staging
+    with:
+      main_bicep_file: apis/main.bicep
+      environment: Prod
+    secrets:
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_APIM_RG: ${{ secrets.AZURE_APIM_RG }}
+      AZURE_APIM_NAME: ${{ secrets.AZURE_APIM_NAME }}
