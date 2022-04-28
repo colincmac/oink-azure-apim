@@ -9,7 +9,18 @@ on:
       environment:
         type: string
         required: true
-
+    secrets:
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      # AZURE_APIM_NAME:
+      #   required: true
+      # AZURE_APIM_RG:
+      #   required: true
+      
 permissions:
   id-token: write
   contents: read

@@ -1,5 +1,5 @@
 # TODO: parameterize and make re-usable 
-name: Publish API Changes
+name: CI/CD - Push Dev API Changes
 on:
   push:
     branches:
@@ -31,7 +31,6 @@ jobs:
       - get_api_to_publish
       - validate_bicep
     with:
-      environment: 'Dev'
       main_bicep_file: ${{ needs.get_api_to_publish.outputs.main_bicep_file }}
 
     
