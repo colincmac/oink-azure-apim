@@ -47,20 +47,20 @@ module apiVer1Rev1 './v1/rev1/deploy.bicep' = {
   }
 }
 
-module apiVer1Rev2 './v1/rev2/deploy.bicep' = {
-  name: 'ver1-rev2'
-  dependsOn: [
-    apiVer1Rev1
-  ]
-  params: {
-    apiDisplayName: apiDisplayName
-    apimServiceName: apim.name
-    apiName: apiName
-    apiType: apiType
-    isCurrent: v1CurrentRev == 2
-    versionSetId: versionSet.outputs.versionSetId
-  }
-}
+// module apiVer1Rev2 './v1/rev2/deploy.bicep' = {
+//   name: 'ver1-rev2'
+//   dependsOn: [
+//     apiVer1Rev1
+//   ]
+//   params: {
+//     apiDisplayName: apiDisplayName
+//     apimServiceName: apim.name
+//     apiName: apiName
+//     apiType: apiType
+//     isCurrent: v1CurrentRev == 2
+//     versionSetId: versionSet.outputs.versionSetId
+//   }
+// }
 
 // var v2CurrentRev = 1
 
