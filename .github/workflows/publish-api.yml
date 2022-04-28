@@ -6,16 +6,18 @@ on:
       main_bicep_file:
         type: string
         required: true
-  workflow_dispatch:
+      environment:
+        type: string
+        required: true
 
 permissions:
   id-token: write
   contents: read
 
-
 jobs:
   main:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

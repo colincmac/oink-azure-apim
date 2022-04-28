@@ -32,5 +32,6 @@ jobs:
       - validate_bicep
     with:
       main_bicep_file: ${{ needs.get_api_to_publish.outputs.main_bicep_file }}
+      environment: Prod
 
     
