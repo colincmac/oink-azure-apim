@@ -9,7 +9,7 @@ param apimRgName string = 'lz-apps-mgmt-oink'
 @minLength(3)
 @maxLength(50)
 @description('Globally unique name of the API Management Service to provision.')
-param apimName string = 'oink-dev-001'
+param apimName string = 'oink-staging-001'
 
 @description('The email address of the owner of the service')
 @minLength(1)
@@ -40,11 +40,11 @@ param existingVnetName string = 'apps-mgmt-oink-eastus2'
 param existingVnetRgName string = apimRgName
 
 @description('Virtual network subnet name.')
-param subnetName string = 'APIM-dev'
+param subnetName string = 'APIM-staging'
 
 @description('''Virtual network subnet prefix. Minumum of `/29` size for a capacitySize of 1.
 Reference: https://docs.microsoft.com/en-us/azure/api-management/virtual-network-concepts?tabs=stv2#subnet-size''')
-param subnetPrefix string = '10.2.4.32/27'
+param subnetPrefix string = '10.2.4.64/27'
 
 @description('Name of NSG to create for the APIM subnet.')
 param apimNsgName string = '${subnetName}-NSG'
@@ -57,8 +57,8 @@ param apimNsgName string = '${subnetName}-NSG'
 @description('How to configure the APIM instance networking.')
 param vnetType string = 'External'
 
-param certificateKeyVaultRg string
-param certificateKeyVaultName string
+param certificateKeyVaultRg string = 'lz-connectivity-001'
+param certificateKeyVaultName string = 'signing-store-001'
 
 module networking '../common-bicep/apim/secureApimNetwork.bicep' = {
   name: 'apimNetworking'
@@ -89,7 +89,7 @@ module apim '../common-bicep/apim/apim.bicep' = {
 }
 
 module kvBaseRbacAccess '../common-bicep/keyVaultRoles.bicep' = {
-  name: 'apim-kv-rbac'
+  name: 'apim-kv-base-rbac'
   scope: resourceGroup(certificateKeyVaultRg)
   params: {
     keyVaultName: certificateKeyVaultName
@@ -100,7 +100,7 @@ module kvBaseRbacAccess '../common-bicep/keyVaultRoles.bicep' = {
 
 // Certificate access seems to fail without this role
 module kvCertRbacAccess '../common-bicep/keyVaultRoles.bicep' = {
-  name: 'apim-kv-rbac'
+  name: 'apim-kv-cert-rbac'
   scope: resourceGroup(certificateKeyVaultRg)
   params: {
     keyVaultName: certificateKeyVaultName

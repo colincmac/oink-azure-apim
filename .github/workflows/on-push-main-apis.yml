@@ -1,5 +1,5 @@
 # TODO: parameterize and make re-usable 
-name: Publish API Changes to Prod
+name: Publish API Changes to Staging/Prod
 on:
   push:
     branches:
@@ -9,35 +9,63 @@ on:
   workflow_dispatch:
     
 jobs:
-  get_api_to_publish:
-    name: "Get API to publish"
-    uses: ./.github/workflows/get-changed-api.yml
-
-  validate_bicep:
-    name: "Validate Bicep files"
-    needs: get_api_to_publish
+  publish_all_staging:
+    name: "Publish API's to Staging"
     runs-on: ubuntu-latest
+    environment: Staging
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Validate that bicep builds
-        run: az bicep build -f main.bicep
-        working-directory: ${{ needs.get_api_to_publish.outputs.api_dir }}
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-  # https://github.com/actions/runner/issues/1490
-  publish_api:
-    name: "Publish API to Prod"
-    uses: ./.github/workflows/publish-api.yml
-    needs:
-      - get_api_to_publish
-      - validate_bicep
-    with:
-      main_bicep_file: ${{ needs.get_api_to_publish.outputs.main_bicep_file }}
-      environment: Prod
-    secrets:
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_APIM_RG: ${{ secrets.AZURE_APIM_RG }}
-      AZURE_APIM_NAME: ${{ secrets.AZURE_APIM_NAME }}
+      - name: Deploy API Revisions
+        uses: azure/arm-deploy@v1
+        with:
+          resourceGroupName: ${{ secrets.AZURE_APIM_RG }}
+          template: apis/main.bicep
+          parameters: apimServiceName=${{ secrets.AZURE_APIM_NAME }}
+
+      - name: Azure logout
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az logout
+            az cache purge
+            az account clear
+
+  publish_all_prod:
+    name: "Publish API's to Prod"
+    runs-on: ubuntu-latest
+    environment: Prod
+    needs: publish_api_staging
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy API Revisions
+        uses: azure/arm-deploy@v1
+        with:
+          resourceGroupName: ${{ secrets.AZURE_APIM_RG }}
+          template: apis/main.bicep
+          parameters: apimServiceName=${{ secrets.AZURE_APIM_NAME }}
+
+      - name: Azure logout
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az logout
+            az cache purge
+            az account clear
