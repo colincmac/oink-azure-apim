@@ -18,7 +18,6 @@ param apiName string = 'fin-acct-mgmt'
 @description('Description of API Version Set.	')
 param versionSetDescription string = 'Version set for ${apiDisplayName}'
 
-// Validates the resource exists before continuing
 resource apim 'Microsoft.ApiManagement/service@2021-08-01' existing = {
   name: apimServiceName
 }
