@@ -1,5 +1,4 @@
-# TODO: parameterize and make re-usable 
-name: CI/CD - Push Dev API Changes
+name: CI/CD - Dev Single API Changes
 on:
   push:
     branches:
@@ -7,7 +6,7 @@ on:
     paths:
       - 'apis/**'
   workflow_dispatch:
-    
+
 jobs:
   get_api_to_publish:
     name: "Get API to publish"
