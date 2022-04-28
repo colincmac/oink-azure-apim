@@ -5,10 +5,10 @@ on:
     outputs:
       api_dir:
         description: "The directory of the added or updated API. Empty if no API was changed."
-        value: ${{ jobs.main.outputs.module_dir }}
+        value: ${{ jobs.main.outputs.api_dir }}
       main_bicep_file:
         description: "The location of the main deployment bicep file for the added or updated API. Empty if no API was changed."
-        value: ${{ jobs.main.outputs.module_dir }}
+        value: ${{ jobs.main.outputs.main_bicep_file }}
 
 # Modified version of Azure's sample repo: https://github.com/Azure/azure-quickstart-templates/blob/master/.github/workflows/auto-fix.yml
 # and Bicep registry https://github.com/Azure/bicep-registry-modules/tree/main/.github/workflows
