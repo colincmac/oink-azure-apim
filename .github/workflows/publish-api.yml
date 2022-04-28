@@ -16,11 +16,11 @@ on:
         required: true
       AZURE_TENANT_ID:
         required: true
-      # AZURE_APIM_NAME:
-      #   required: true
-      # AZURE_APIM_RG:
-      #   required: true
-      
+      AZURE_APIM_NAME:
+        required: true
+      AZURE_APIM_RG:
+        required: true
+
 permissions:
   id-token: write
   contents: read
