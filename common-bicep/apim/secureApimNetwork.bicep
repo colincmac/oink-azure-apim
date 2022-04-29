@@ -5,13 +5,13 @@ param location string = resourceGroup().location
 param existingVnetName string
 
 @description('Virtual network subnet name.')
-param subnetName string = 'APIM'
+param subnetName string
 
 @description('Virtual network subnet prefix.\n https://docs.microsoft.com/en-us/azure/api-management/virtual-network-concepts?tabs=stv2#subnet-size')
-param subnetPrefix string = '10.0.4.0/27'
+param subnetPrefix string
 
 @description('Name of NSG to create for the APIM subnet.')
-param apimNsgName string = 'apim-NSG'
+param apimNsgName string
 
 @description('If `true`, the APIM instance is external and traffic over ports 80 & 443 are allowed.')
 param isExternal bool = true

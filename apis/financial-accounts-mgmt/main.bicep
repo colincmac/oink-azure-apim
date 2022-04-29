@@ -33,7 +33,7 @@ module versionSet '../common-bicep/versionSet.bicep' = {
   }
 }
 
-var v1CurrentRev = 1
+var v1CurrentRev = 2
 
 module apiVer1Rev1 './v1/rev1/deploy.bicep' = {
   name: 'ver1-rev1'
@@ -62,16 +62,19 @@ module apiVer1Rev2 './v1/rev2/deploy.bicep' = {
   }
 }
 
-// var v2CurrentRev = 1
+var v2CurrentRev = 1
 
-// module apiVer2Rev1 './v2/rev1/deploy.bicep' = {
-//   name: 'ver2-rev1'
-//   params: {
-//     apiDisplayName: apiDisplayName
-//     apimServiceName: apim.name
-//     apiName: apiName
-//     apiType: apiType
-//     isCurrent: v2CurrentRev == 1
-//     versionSetId: versionSet.outputs.versionSetId
-//   }
-// }
+module apiVer2Rev1 './v2/rev1/deploy.bicep' = {
+  name: 'ver2-rev1'
+  dependsOn: [
+    apiVer1Rev2
+  ]
+  params: {
+    apiDisplayName: apiDisplayName
+    apimServiceName: apim.name
+    apiName: apiName
+    apiType: apiType
+    isCurrent: v2CurrentRev == 1
+    versionSetId: versionSet.outputs.versionSetId
+  }
+}

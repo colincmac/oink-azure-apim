@@ -34,14 +34,6 @@ param skuSize string = 'Developer'
 @description('The instance size of this API Management service.')
 param capacitySize int = 1
 
-@allowed([
-  'External'
-  'Internal'
-  // 'private-endpoint'
-])
-@description('How to configure the APIM instance networking.')
-param vnetType string = 'External'
-
 var env = {
   dev: json(loadTextContent('config.dev.json'))
   staging: json(loadTextContent('config.staging.json'))
@@ -64,7 +56,7 @@ module networking '../common-bicep/apim/secureApimNetwork.bicep' = {
     existingVnetName: existingVnetName
     subnetName: subnetName
     subnetPrefix: subnetPrefix
-    isExternal: vnetType == 'external'
+    isExternal: true
     location: location
   }
 }
@@ -80,7 +72,7 @@ module apim '../common-bicep/apim/apim.bicep' = {
     publisherName: publisherName
     skuSize: skuSize
     location: location
-    vnetType: vnetType
+    vnetType: 'External'
   }
 }
 

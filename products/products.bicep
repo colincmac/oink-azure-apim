@@ -28,3 +28,17 @@ module starter '../common-bicep/product/product.bicep' = {
     productName: 'starter'
   }
 }
+
+module beta '../common-bicep/product/product.bicep' = {
+  name: 'product-beta'
+  params: {
+    productDescription: 'Allows for Beta API access.'
+    subscriptionRequired: true
+    approvalRequired: true
+    subscriptionLimit: 1
+    isPublished: true
+    productDisplayName: 'Beta'
+    apimServiceName: apimServiceName
+    productName: 'beta'
+  }
+}

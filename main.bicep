@@ -7,8 +7,7 @@ param apimServiceName string
   profileEditPolicy: 'Name of the B2C profile edit policy'
   signInPolicy: 'Name of the B2C sign in policy'
   signUpPolicy: 'Name of the B2C sign up policy'
-  tenantName: '(Optional) contoso.onmicrosoft.com'
-  authority: '(Optional) contoso.b2clogin.com'
+  tenantName: 'Name of the tenant. Value of `contoso` creates authority contoso.b2clogin.com'
 })
 @secure()
 param portalB2cConfig object
@@ -27,7 +26,6 @@ module security 'security/main.bicep' = {
     b2cSignInPolicy: portalB2cConfig.signInPolicy
     b2cSignUpPolicy: portalB2cConfig.signUpPolicy
     b2cTenantName: portalB2cConfig.tenantName
-    b2cAuthority: portalB2cConfig.authority
   }
 }
 

@@ -21,6 +21,7 @@ The Azure architecture uses a branching model similar to [Trunk Based Developmen
 
 - Git tag a push to `dev` that has API changes, similar to the [Azure Bicep Registry](https://github.com/Azure/bicep-registry-modules).
 - Package and release the built ARM JSON artifacts from the `bicep build` command.
+- Deploy each API from Dev => Prod through it's own branch. This could coincide with the application deployment.
 
 ## Similarities to the referenced Azure Accelerator
 
