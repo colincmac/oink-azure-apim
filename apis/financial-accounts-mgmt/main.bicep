@@ -66,6 +66,9 @@ var v2CurrentRev = 1
 
 module apiVer2Rev1 './v2/rev1/deploy.bicep' = {
   name: 'ver2-rev1'
+  dependsOn: [
+    apiVer1Rev2
+  ]
   params: {
     apiDisplayName: apiDisplayName
     apimServiceName: apim.name
