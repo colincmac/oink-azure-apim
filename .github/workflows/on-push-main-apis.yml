@@ -23,6 +23,7 @@ jobs:
   publish_all_staging:
     name: "Publish API's to Staging"
     uses: ./.github/workflows/deploy-bicep.yml
+    needs: validate_bicep
     with:
       main_bicep_file: apis/main.bicep
       workflow_environment: Staging
