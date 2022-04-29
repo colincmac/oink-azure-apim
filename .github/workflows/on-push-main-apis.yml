@@ -16,6 +16,9 @@ jobs:
       main_bicep_file: apis/main.bicep
       environment: Staging
     secrets:
+      # https://github.com/actions/runner/issues/1490
+      # These are actually comming in from the environment, but
+      # need to be referenced here due to this bug
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
@@ -29,7 +32,11 @@ jobs:
     with:
       main_bicep_file: apis/main.bicep
       environment: Prod
+      parameters: apimServiceName=${{ secrets.AZURE_APIM_NAME }}
     secrets:
+      # https://github.com/actions/runner/issues/1490
+      # These are actually comming in from the environment, but
+      # need to be referenced here due to this bug
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}

@@ -9,7 +9,13 @@ on:
       environment:
         type: string
         required: true
+      parameters:
+        type: string
+        required: false
     secrets:
+      # https://github.com/actions/runner/issues/1490
+      # These are actually comming in from the environment, but
+      # need to be referenced here due to this bug
       AZURE_SUBSCRIPTION_ID:
         required: true
       AZURE_CLIENT_ID:
@@ -45,7 +51,7 @@ jobs:
         with:
           resourceGroupName: ${{ secrets.AZURE_APIM_RG }}
           template: ${{ inputs.main_bicep_file }}
-          parameters: apimServiceName=${{ secrets.AZURE_APIM_NAME }}
+          parameters: ${{ inputs.parameters }}
 
           # NOTE: Parameter JSON files are currently not used. 
           # API configuration's are kept in Github secrets and passed in.
