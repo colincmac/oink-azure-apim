@@ -1,4 +1,4 @@
-name: Publish API
+name: Publish Bicep
 
 on:
   workflow_call:
@@ -6,7 +6,7 @@ on:
       main_bicep_file:
         type: string
         required: true
-      environment:
+      workflow_environment:
         type: string
         required: true
       parameters:
@@ -14,7 +14,7 @@ on:
         required: false
     secrets:
       # https://github.com/actions/runner/issues/1490
-      # These are actually comming in from the environment, but
+      # These are actually coming in from the environment, but
       # need to be referenced here due to this bug
       AZURE_SUBSCRIPTION_ID:
         required: true
@@ -34,7 +34,7 @@ permissions:
 jobs:
   main:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment: ${{ inputs.workflow_environment }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -51,7 +51,7 @@ jobs:
         with:
           resourceGroupName: ${{ secrets.AZURE_APIM_RG }}
           template: ${{ inputs.main_bicep_file }}
-          parameters: ${{ inputs.parameters }}
+          parameters: apimServiceName=${{ secrets.AZURE_APIM_NAME }} ${{ inputs.parameters }}
 
           # NOTE: Parameter JSON files are currently not used. 
           # API configuration's are kept in Github secrets and passed in.
