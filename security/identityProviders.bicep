@@ -12,8 +12,8 @@ param b2cSignInPolicy string
 param b2cProfileEditPolicy string
 param b2cPasswordResetPolicy string
 
-param b2cSignInTenant string = '${b2cTenantName}.onmicrosoft.com'
-param b2cAuthority string = '${b2cTenantName}.b2clogin.com'
+var b2cSignInTenant = '${b2cTenantName}.onmicrosoft.com'
+var b2cAuthority = '${b2cTenantName}.b2clogin.com'
 
 resource apimService 'Microsoft.ApiManagement/service@2021-08-01' existing = {
   name: apimServiceName
@@ -31,5 +31,8 @@ resource b2cIdentityProvider 'Microsoft.ApiManagement/service/identityProviders@
     signupPolicyName: b2cSignUpPolicy
     signinPolicyName: b2cSignInPolicy
     signinTenant: b2cSignInTenant
+    allowedTenants: [
+      b2cSignInTenant
+    ]
   }
 }
