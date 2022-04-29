@@ -14,7 +14,7 @@ module apiRevision '../../../common-bicep/apiVersion.bicep' = {
     apiType: apiType
     versionSetId: versionSetId
 
-    apiVersionedName: apiName
+    apiVersionedName: '${apiName}-${rev.version}'
     apiVersion: rev.version
     apiPath: rev.path
     revision: rev.revision
