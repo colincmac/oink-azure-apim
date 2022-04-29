@@ -6,7 +6,7 @@ This sample demonstrates a possible DevOps strategy for Azure API Management dep
 
 It follows a similar process as the [APIM Landing Zone Accelerator](https://github.com/Azure/apim-landing-zone-accelerator/blob/main/docs/Design-Areas/automation-devops.md), with a few changes.
 
-The Azure architecture uses a branching model similar to [Trunk Based Development](https://trunkbaseddevelopment.com/), where there are atomic changes to the `main` branch that release into the Prod APIM instance. Releases are controlled by PR's from team specific forked repositories to the original repos `main` branch. These changes are are reviewed by the primary APIM team and merged in, releasing to the shared environments (Staging & Prod).
+The Azure architecture uses a branching model similar to [Trunk Based Development](https://trunkbaseddevelopment.com/), where there are atomic changes to the `main` branch that release into the Prod APIM instance. Releases are controlled by PR's, from team specific forked repositories, to the original repos `main` branch. These changes are are reviewed by the primary APIM team and merged in, releasing to the shared environments (Staging & Prod).
 
 ## API CI/CD Flow
 
