@@ -1,15 +1,16 @@
 targetScope = 'subscription'
 
+@allowed([
+  'dev'
+  'staging'
+  'prod'
+])
+param environment string
+
+param apimServiceName string
+
 @description('Targeted region to deploy resources.')
 param location string = deployment().location
-
-@description('Target Resource Group for the API Management Service.')
-param apimRgName string = 'lz-apps-mgmt-oink'
-
-@minLength(3)
-@maxLength(50)
-@description('Globally unique name of the API Management Service to provision.')
-param apimName string = 'oink-staging-001'
 
 @description('The email address of the owner of the service')
 @minLength(1)
@@ -33,22 +34,6 @@ param skuSize string = 'Developer'
 @description('The instance size of this API Management service.')
 param capacitySize int = 1
 
-@description('Existing virtual network name.')
-param existingVnetName string = 'apps-mgmt-oink-eastus2'
-
-@description('Existing virtual network resource group.')
-param existingVnetRgName string = apimRgName
-
-@description('Virtual network subnet name.')
-param subnetName string = 'APIM-staging'
-
-@description('''Virtual network subnet prefix. Minumum of `/29` size for a capacitySize of 1.
-Reference: https://docs.microsoft.com/en-us/azure/api-management/virtual-network-concepts?tabs=stv2#subnet-size''')
-param subnetPrefix string = '10.2.4.64/27'
-
-@description('Name of NSG to create for the APIM subnet.')
-param apimNsgName string = '${subnetName}-NSG'
-
 @allowed([
   'External'
   'Internal'
@@ -57,8 +42,19 @@ param apimNsgName string = '${subnetName}-NSG'
 @description('How to configure the APIM instance networking.')
 param vnetType string = 'External'
 
-param certificateKeyVaultRg string = 'lz-connectivity-001'
-param certificateKeyVaultName string = 'signing-store-001'
+var env = {
+  dev: json(loadTextContent('config.dev.json'))
+  staging: json(loadTextContent('config.staging.json'))
+  prod: json(loadTextContent('config.prod.json'))
+}
+var existingVnetName = env[environment].existingVnetName
+var existingVnetRgName = env[environment].existingVnetRgName
+var subnetName = env[environment].subnetName
+var subnetPrefix = env[environment].subnetPrefix
+var certificateKeyVaultRg = env[environment].certificateKeyVaultRg
+var certificateKeyVaultName = env[environment].certificateKeyVaultName
+var apimRgName = env[environment].apimRgName
+var apimNsgName = '${subnetName}-NSG'
 
 module networking '../common-bicep/apim/secureApimNetwork.bicep' = {
   name: 'apimNetworking'
@@ -74,10 +70,10 @@ module networking '../common-bicep/apim/secureApimNetwork.bicep' = {
 }
 
 module apim '../common-bicep/apim/apim.bicep' = {
-  name: apimName
+  name: apimServiceName
   scope: resourceGroup(apimRgName)
   params: {
-    apimName: apimName
+    apimName: apimServiceName
     capacitySize: capacitySize
     existingSubnetId: networking.outputs.subnetId
     publisherEmail: publisherEmail
@@ -108,19 +104,5 @@ module kvCertRbacAccess '../common-bicep/keyVaultRoles.bicep' = {
     roleGuid: 'a4417e6f-fecd-4de8-b567-7b0420556985' // Key Vault Certificates Officer
   }
 }
-
-// TODO: configure default loggers and diagnostics
-// module apimLogging '../common-bicep/apim/logging.bicep' = {
-//   name: '${apimName}-logging'
-//   scope: resourceGroup(apimRgName)
-//   dependsOn: [
-//     apim
-//   ]
-//   params: {
-//     apimName: apimName
-//     appInsightsId: appInsightsId
-//     appInsightsInstrumentationKey: appInsightsInstrumentationKey
-//   }
-// }
 
 output apimId string = apim.outputs.apimId

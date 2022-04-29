@@ -1,0 +1,9 @@
+{
+  "existingVnetName": "apps-mgmt-oink-eastus2",
+  "existingVnetRgName": "lz-apps-mgmt-oink",
+  "subnetName": "APIM-staging",
+  "subnetPrefix": "10.2.4.64/27",
+  "certificateKeyVaultRg": "lz-connectivity-001",
+  "certificateKeyVaultName": "signing-store-001",
+  "apimRgName": "lz-apps-mgmt-oink"
+}

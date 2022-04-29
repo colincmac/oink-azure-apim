@@ -1,6 +1,7 @@
 param apimServiceName string
 param developerAadGroup string
 
+// Example group, not in use at the moment
 module orgDeveloperGroup '../common-bicep/group/group.bicep' = {
   name: 'orgDevGroup'
   params: {

@@ -26,17 +26,16 @@ jobs:
 
   publish_api:
     name: "Publish API to Dev"
-    uses: ./.github/workflows/publish-api.yml
+    uses: ./.github/workflows/deploy-bicep.yml
     needs:
       - get_api_to_publish
       - validate_bicep
     with:
       main_bicep_file: ${{ needs.get_api_to_publish.outputs.main_bicep_file }}
-      environment: Dev
-      parameters: apimServiceName=${{ secrets.AZURE_APIM_NAME }}
+      workflow_environment: Dev
     secrets:
       # https://github.com/actions/runner/issues/1490
-      # These are actually comming in from the environment, but
+      # These are actually coming in from the environment, but
       # need to be referenced here due to this bug
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
