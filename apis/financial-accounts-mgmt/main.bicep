@@ -22,7 +22,7 @@ resource apim 'Microsoft.ApiManagement/service@2021-08-01' existing = {
   name: apimServiceName
 }
 
-module versionSet '../common-bicep/versionSet.bicep' = {
+module versionSet '../../common-bicep/api/versionSet.bicep' = {
   name: 'versionSet-${apiName}'
   params: {
     apiDisplayName: apiDisplayName
@@ -75,6 +75,20 @@ module apiVer2Rev1 './v2/rev1/deploy.bicep' = {
     apiName: apiName
     apiType: apiType
     isCurrent: v2CurrentRev == 1
+    versionSetId: versionSet.outputs.versionSetId
+  }
+}
+
+var betaCurrentRev = 1
+
+module beta './beta/rev1/deploy.bicep' = {
+  name: 'beta-rev1'
+  params: {
+    apiDisplayName: apiDisplayName
+    apimServiceName: apim.name
+    apiName: apiName
+    apiType: apiType
+    isCurrent: betaCurrentRev == 1
     versionSetId: versionSet.outputs.versionSetId
   }
 }

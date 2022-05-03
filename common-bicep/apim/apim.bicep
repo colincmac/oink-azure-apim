@@ -45,6 +45,7 @@ param vnetType string = empty(existingSubnetId) ? 'None' : 'External'
 // In this example, the custom domain for the Gateway is configured post deployment.
 // The associated certificate keyvault is only accessible from a private endpoint and uses RBAC roles,
 // which causes the deployment to fail if we try to add the domain during creation.
+// TODO: investigate if domain deployment issue is related to NSG rules
 resource apim 'Microsoft.ApiManagement/service@2021-08-01' = {
   name: apimName
   location: location

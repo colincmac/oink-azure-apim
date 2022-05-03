@@ -1,0 +1,13 @@
+{
+  "version": "beta",
+  "revision": 1,
+  "subscriptionRequired": true,
+  "path": "fin-account-mgmt",
+  "revisionDescription": "Beta - initial revision",
+  "apiDescription": "User management of financial accounts.",
+  "releaseNotes": "",
+  "serviceUrl": "http://localhost:7071/api/beta",
+  "products": [
+    "beta"
+  ]
+}

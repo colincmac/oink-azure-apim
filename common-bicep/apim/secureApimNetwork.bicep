@@ -21,6 +21,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-05-01' existing = {
 }
 
 var externalApimSecurityRules = [
+  // TODO: not sure we need port 80, maybe for redirects?...
   {
     name: 'Client_communication_to_API_Management'
     properties: {

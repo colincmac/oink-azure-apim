@@ -6,7 +6,7 @@ param apiDisplayName string
 param isCurrent bool
 
 var rev = json(loadTextContent('revision-info.json'))
-module apiRevision '../../../common-bicep/apiVersion.bicep' = {
+module apiRevision '../../../../common-bicep/api/apiVersion.bicep' = {
   name: '${apiName}-${rev.version}-rev${rev.revision}'
   params: {
     apimServiceName: apimServiceName
@@ -31,3 +31,7 @@ module apiRevision '../../../common-bicep/apiVersion.bicep' = {
     globalPolicyFormat: 'rawxml'
   }
 }
+
+output revisionId string = apiRevision.outputs.apiId
+output revisionName string = apiRevision.outputs.revisionName
+output versionedName string = apiRevision.outputs.versionedName
